@@ -24,7 +24,7 @@ const AllocationForm = (props) => {
             }else{
                 tarExpense = tarExpense[0];
                 if(expense.cost > tarExpense.cost) {
-                    alert("The value cannot exceed remaining funds  £"+tarExpense.cost);
+                    alert("The value cannot exceed Allocated Budget £"+tarExpense.cost);
                     setCost("");
                     return;
                 }
