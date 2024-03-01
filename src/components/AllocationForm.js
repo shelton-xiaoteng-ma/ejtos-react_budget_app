@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 
 const AllocationForm = (props) => {
-    const { dispatch,remaining  } = useContext(AppContext);
+    const { dispatch,remaining, expenses} = useContext(AppContext);
 
     const [name, setName] = useState('');
     const [cost, setCost] = useState('');
@@ -11,27 +11,39 @@ const AllocationForm = (props) => {
 
     const submitEvent = () => {
 
-            if(cost > remaining) {
-                alert("The value cannot exceed remaining funds  £"+remaining);
-                setCost("");
-                return;
-            }
-
         const expense = {
             name: name,
             cost: parseInt(cost),
         };
         if(action === "Reduce") {
-            dispatch({
-                type: 'RED_EXPENSE',
-                payload: expense,
-            });
-        } else {
+            let tarExpense = expenses.filter((item) => item.name===expense.name);
+            if (tarExpense.length === 0){
+                alert("expense name invalid. name: ", expense.name);
+                setCost("");
+                return;
+            }else{
+                tarExpense = tarExpense[0];
+                if(expense.cost > tarExpense.cost) {
+                    alert("The value cannot exceed remaining funds  £"+tarExpense.cost);
+                    setCost("");
+                    return;
+                }
                 dispatch({
-                    type: 'ADD_EXPENSE',
+                    type: 'RED_EXPENSE',
                     payload: expense,
                 });
             }
+        } else {
+            if(expense.cost > remaining) {
+                alert("The value cannot exceed remaining funds  £"+remaining);
+                setCost("");
+                return;
+            }
+            dispatch({
+                type: 'ADD_EXPENSE',
+                payload: expense,
+            });
+        }
     };
 
     return (
